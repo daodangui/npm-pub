@@ -11,10 +11,10 @@ const cdProjectRepo = (path, projectName) => {
 
   shell.cd(path);
   if (shell.which('npm')) {
-    const registry = shell.exec('npm config get registry');
-    if (!registry.stdout.includes('https://fs-npm.tuhu.cn/')) {
-      shell.exec('npm config set registry https://fs-npm.tuhu.cn/');
-    }
+    // const registry = shell.exec('npm config get registry');
+    // if (!registry.stdout.includes('https://fs-npm.tuhu.cn/')) {
+    //   shell.exec('npm config set registry https://fs-npm.tuhu.cn/');
+    // }
     shell.exec('npm whoami', {
       silent: true
     }, (code, stdout, stderr) => {
