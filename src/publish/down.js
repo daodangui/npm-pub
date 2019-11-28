@@ -9,29 +9,27 @@ const downloadProject = async (address, branch) => {
     const projectName = address.match(/\/(.*)\.git$/)[1];
     const url = address.slice(4, -4);
     const path = `${process.cwd()}/repo/${projectName}`;
-    fs.access(path, (err) => {
-      if (err) {
-        const spinner = ora(`等待clone项目${projectName}...`).start();
-        downGitRepo(
-          `${url}#${branch}`,
-          path,
-          { clone: true },
-          (err) => {
-            if (err) {
-              spinner.fail(err);
-              reject(err);
-            } else {
-              spinner.succeed(chalk.green('项目clone成功！'));
-              resolve(projectName);
-            }
-          });
-      } else {
-        shell.cd(path);
-        shell.exec('git checkout master');
-        shell.exec('git pull');
-        resolve(projectName);
-      }
-    });
+    if (fs.existsSync(path)) {
+      shell.cd(path);
+      shell.exec('git checkout master');
+      shell.exec('git pull');
+      resolve(projectName);
+    } else {
+      const spinner = ora(`等待clone项目${projectName}...`).start();
+      downGitRepo(
+        `${url}#${branch}`,
+        path,
+        { clone: true },
+        (err) => {
+          if (err) {
+            spinner.fail(err);
+            reject(err);
+          } else {
+            spinner.succeed(chalk.green('项目clone成功！'));
+            resolve(projectName);
+          }
+        });
+    }
   });
   return res;
 }
